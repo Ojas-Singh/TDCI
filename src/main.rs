@@ -3,53 +3,68 @@
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::env;
-use std::time::{ Instant};
+use std::time::Instant;
 
-#[path = "modules/read_write.rs"] mod read_write;
-#[path = "modules/configurations.rs"] mod configurations;
-#[path = "modules/second_quantization.rs"] mod second_quantization;
+#[path = "modules/configurations.rs"]
+mod configurations;
+#[path = "modules/read_write.rs"]
+mod read_write;
+#[path = "modules/second_quantization.rs"]
+mod second_quantization;
 
 pub struct Config {
-    n : usize,
-    m : usize,
-    excitation : String,
-    oneelectronfilename : String,
-    twoelectronfilename : String,
-    truncation : usize,
+    n: usize,
+    m: usize,
+    excitation: String,
+    oneelectronfilename: String,
+    twoelectronfilename: String,
+    truncation: usize,
 }
 
 fn main() {
     println!("Configuration Interaction Method");
     let args: Vec<String> = env::args().collect();
-    
+
     match args.len() {
         1 => {
             println!("");
         }
         7 => {
             println!("Reading Files ...");
-            let setting :Config = arg2cfg(args);
+            let setting: Config = arg2cfg(args);
             println!(
                 "n : {}, m : {}, excite : {}, oneElectron : {}, twoElectron : {}, truncation: {}",
-                setting.n, setting.m,setting.excitation , setting.oneelectronfilename, setting.twoelectronfilename, setting.truncation
+                setting.n,
+                setting.m,
+                setting.excitation,
+                setting.oneelectronfilename,
+                setting.twoelectronfilename,
+                setting.truncation
             );
-            let binstates = configurations::bit_slaterdeterminants(setting.excitation,setting.n,setting.m,setting.truncation);
+            let binstates = configurations::bit_slaterdeterminants(
+                setting.excitation,
+                setting.n,
+                setting.m,
+                setting.truncation,
+            );
             println!("Total Generated States :{}", binstates.len());
             let Honemat = read_write::Hone(setting.oneelectronfilename, setting.m);
             let Vmat = read_write::Vpqrs(setting.twoelectronfilename, setting.m);
             let start = Instant::now();
-            let ham = second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
+            let ham =
+                second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
             let duration = start.elapsed();
-            println!("Time elapsed in computeHamiltonianMatrix is: {:?}", duration);
+            println!(
+                "Time elapsed in computeHamiltonianMatrix is: {:?}",
+                duration
+            );
             read_write::save_hamiltonian_txt(ham, "ham.txt".to_string());
-
         }
 
         _ => {
             help();
         }
     }
-    
 }
 
 pub fn arg2cfg(args: Vec<String>) -> Config {
@@ -59,16 +74,16 @@ pub fn arg2cfg(args: Vec<String>) -> Config {
     let f1 = &args[4];
     let f2 = &args[5];
     let truncation = &args[6];
-    let nf =n0.trim().parse().unwrap();
-    let mf =m0.trim().parse().unwrap();
-    let t =truncation.trim().parse().unwrap();
+    let nf = n0.trim().parse().unwrap();
+    let mf = m0.trim().parse().unwrap();
+    let t = truncation.trim().parse().unwrap();
     let setting = Config {
-        n : nf,
-        m : mf,
-        excitation : excite.to_string(),
-        oneelectronfilename : f1.to_string(),
-        twoelectronfilename : f2.to_string(),
-        truncation : t,
+        n: nf,
+        m: mf,
+        excitation: excite.to_string(),
+        oneelectronfilename: f1.to_string(),
+        twoelectronfilename: f2.to_string(),
+        truncation: t,
     };
     return setting;
 }

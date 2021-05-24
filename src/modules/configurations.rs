@@ -1,7 +1,12 @@
 use bit_array::BitArray;
 use typenum::U64;
 
-pub fn bit_slaterdeterminants(excitation: String, n: usize, m: usize, truncation: usize) -> Vec<BitArray<u64, U64>>{
+pub fn bit_slaterdeterminants(
+    excitation: String,
+    n: usize,
+    m: usize,
+    truncation: usize,
+) -> Vec<BitArray<u64, U64>> {
     fn creatinitialstate(excite: String, n: usize) -> Vec<Vec<isize>> {
         let mut stateout = Vec::new();
         if excite == "Singlet" {
@@ -82,7 +87,7 @@ pub fn bit_slaterdeterminants(excitation: String, n: usize, m: usize, truncation
         }
         return numberofexited;
     }
-    
+
     fn createbinarystatearray(state: Vec<isize>) -> BitArray<u64, U64> {
         let mut binstate = BitArray::<u64, U64>::from_elem(false);
         for i in state {
@@ -103,7 +108,12 @@ pub fn bit_slaterdeterminants(excitation: String, n: usize, m: usize, truncation
         return state;
     }
 
-    fn createslaterdeterminants(n: usize, m: usize, excite: String, t: usize) -> Vec<BitArray<u64, U64>> {
+    fn createslaterdeterminants(
+        n: usize,
+        m: usize,
+        excite: String,
+        t: usize,
+    ) -> Vec<BitArray<u64, U64>> {
         let mut binstates = Vec::new();
         let N: usize;
         if n % 2 == 0 {
@@ -126,7 +136,7 @@ pub fn bit_slaterdeterminants(excitation: String, n: usize, m: usize, truncation
             if sm == 0 {
                 up = false;
             } else {
-                if compare(stateup.clone(), ground.clone()) < t+1 {
+                if compare(stateup.clone(), ground.clone()) < t + 1 {
                     statesup.push(stateup.clone());
                 }
             }
@@ -137,7 +147,7 @@ pub fn bit_slaterdeterminants(excitation: String, n: usize, m: usize, truncation
             if sm == 0 {
                 down = false;
             } else {
-                if compare(statedown.clone(), ground.clone()) < t+1 {
+                if compare(statedown.clone(), ground.clone()) < t + 1 {
                     statesdown.push(statedown.clone());
                 }
             }
@@ -154,7 +164,6 @@ pub fn bit_slaterdeterminants(excitation: String, n: usize, m: usize, truncation
         return binstates;
     }
     let excite = excitation.clone();
-    let binstates = createslaterdeterminants(n,m,excite,truncation);
-    return binstates
-
+    let binstates = createslaterdeterminants(n, m, excite, truncation);
+    return binstates;
 }

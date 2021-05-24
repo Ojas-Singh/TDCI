@@ -1,8 +1,8 @@
+use num::complex::Complex;
 use std::fs::File;
 use std::io::{self, BufRead, BufWriter, Write};
 use std::path::Path;
 use std::sync::Mutex;
-use num::complex::Complex;
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
@@ -73,7 +73,6 @@ pub fn Vpqrs(f2: String, M: usize) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
     }
     return Vvec;
 }
-
 
 pub fn save_hamiltonian_txt(hamiltonian: Mutex<Vec<Vec<Complex<f64>>>>, file: String) {
     let hamiltonian = hamiltonian.lock().unwrap();

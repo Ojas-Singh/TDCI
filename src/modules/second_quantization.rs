@@ -1,8 +1,8 @@
-use typenum::U64;
 use bit_array::BitArray;
-use std::sync::Mutex;
-use rayon::prelude::*;
 use num::complex::Complex;
+use rayon::prelude::*;
+use std::sync::Mutex;
+use typenum::U64;
 
 #[inline(always)]
 pub fn sign(n: usize, binstate: &BitArray<u64, U64>) -> f64 {
@@ -12,7 +12,7 @@ pub fn sign(n: usize, binstate: &BitArray<u64, U64>) -> f64 {
             s *= -1.0;
         }
     }
-    return s; 
+    return s;
 }
 #[inline(always)]
 pub fn addparticle(n: usize, binstate: &mut BitArray<u64, U64>) {
@@ -131,11 +131,11 @@ pub fn computeHamiltonianMatrix(
                         &binstates[m],
                     );
                     hmn += h[p][q] * phase;
-                    
+
                     for r in 0..M {
                         for s in 0..M {
                             let V = v[p][r][q][s];
-                            if  V != Complex::new(0.0, 0.0) {
+                            if V != Complex::new(0.0, 0.0) {
                                 phase = 0.0;
                                 phase += secondQuantizationTwoBodyOperator(
                                     2 * p,
@@ -171,8 +171,6 @@ pub fn computeHamiltonianMatrix(
                                 );
                                 hmn += 0.5 * V * phase;
                             }
-                            
-                            
                         }
                     }
                 }
@@ -186,5 +184,3 @@ pub fn computeHamiltonianMatrix(
     });
     return hamiltonian;
 }
-
-
