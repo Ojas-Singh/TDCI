@@ -12,7 +12,9 @@ lto = "fat"
 codegen-units=1
 panic = "abort"
 
+
 [dependencies]
+num = "0.4"
 num-iter = "0.1.42"
 typenum = "1.12.0"
 bit-array = "0.4.4"
