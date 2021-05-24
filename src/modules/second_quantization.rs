@@ -117,7 +117,7 @@ pub fn computeHamiltonianMatrix(
             let mut hmn = Complex::new(0.0, 0.0);
             for p in 0..M {
                 for q in 0..M {
-                    let mut phase = Complex::new(0.0, 0.0);
+                    let mut phase = 0.0;
                     phase += secondQuantizationOneBodyOperator(
                         2 * p,
                         2 * q,
@@ -136,7 +136,7 @@ pub fn computeHamiltonianMatrix(
                         for s in 0..M {
                             let V = v[p][r][q][s];
                             if  V != Complex::new(0.0, 0.0) {
-                                phase = Complex::new(0.0, 0.0);
+                                phase = 0.0;
                                 phase += secondQuantizationTwoBodyOperator(
                                     2 * p,
                                     2 * q,
