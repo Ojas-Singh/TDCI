@@ -12,7 +12,7 @@ pub fn sign(n: usize, binstate: &BitArray<u64, U64>) -> f64 {
             s *= -1.0;
         }
     }
-    return s;
+    s
 }
 #[inline(always)]
 pub fn addparticle(n: usize, binstate: &mut BitArray<u64, U64>) {
@@ -63,7 +63,7 @@ pub fn secondQuantizationOneBodyOperator(
     if &state1 != state2 {
         return 0.0;
     }
-    return phase;
+    phase
 }
 #[inline(always)]
 pub fn secondQuantizationTwoBodyOperator(
@@ -101,7 +101,7 @@ pub fn secondQuantizationTwoBodyOperator(
     if &state1 != state2 {
         return 0.0;
     }
-    return phase;
+    phase
 }
 
 pub fn computeHamiltonianMatrix(
@@ -182,5 +182,5 @@ pub fn computeHamiltonianMatrix(
             }
         }
     });
-    return hamiltonian;
+    hamiltonian
 }

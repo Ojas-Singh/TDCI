@@ -27,7 +27,7 @@ fn main() {
 
     match args.len() {
         1 => {
-            println!("");
+            println!("Pass args");
         }
         7 => {
             println!("Reading Files ...");
@@ -77,15 +77,14 @@ pub fn arg2cfg(args: Vec<String>) -> Config {
     let nf = n0.trim().parse().unwrap();
     let mf = m0.trim().parse().unwrap();
     let t = truncation.trim().parse().unwrap();
-    let setting = Config {
+    Config {
         n: nf,
         m: mf,
         excitation: excite.to_string(),
         oneelectronfilename: f1.to_string(),
         twoelectronfilename: f2.to_string(),
         truncation: t,
-    };
-    return setting;
+    }
 }
 
 fn help() {

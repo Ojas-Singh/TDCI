@@ -58,7 +58,7 @@ pub fn bit_slaterdeterminants(
                 return stateout;
             }
         }
-        return stateout;
+        stateout
     }
 
     fn odometer(state: Vec<isize>, n: isize, m: isize) -> Vec<isize> {
@@ -75,7 +75,7 @@ pub fn bit_slaterdeterminants(
             }
         }
         newstate.iter_mut().for_each(|x| *x = 0);
-        return newstate;
+        newstate
     }
 
     fn compare(state: Vec<isize>, ground: Vec<isize>) -> usize {
@@ -85,7 +85,7 @@ pub fn bit_slaterdeterminants(
                 numberofexited += 1;
             }
         }
-        return numberofexited;
+        numberofexited
     }
 
     fn createbinarystatearray(state: Vec<isize>) -> BitArray<u64, U64> {
@@ -94,7 +94,7 @@ pub fn bit_slaterdeterminants(
             let k: usize = (i - 1) as usize;
             binstate.set(k, true);
         }
-        return binstate;
+        binstate
     }
 
     fn mix(state1: Vec<isize>, state2: Vec<isize>) -> Vec<isize> {
@@ -105,7 +105,7 @@ pub fn bit_slaterdeterminants(
         for i in state2 {
             state.push(2 * i);
         }
-        return state;
+        state
     }
 
     fn createslaterdeterminants(
@@ -135,10 +135,8 @@ pub fn bit_slaterdeterminants(
             let sm: isize = stateup.iter().sum();
             if sm == 0 {
                 up = false;
-            } else {
-                if compare(stateup.clone(), ground.clone()) < t + 1 {
-                    statesup.push(stateup.clone());
-                }
+            } else if compare(stateup.clone(), ground.clone()) < t + 1 {
+                statesup.push(stateup.clone());
             }
         }
         while down {
@@ -146,10 +144,8 @@ pub fn bit_slaterdeterminants(
             let sm: isize = statedown.iter().sum();
             if sm == 0 {
                 down = false;
-            } else {
-                if compare(statedown.clone(), ground.clone()) < t + 1 {
-                    statesdown.push(statedown.clone());
-                }
+            } else if compare(statedown.clone(), ground.clone()) < t + 1 {
+                statesdown.push(statedown.clone());
             }
         }
         for i in statesup {
@@ -161,9 +157,8 @@ pub fn bit_slaterdeterminants(
                 }
             }
         }
-        return binstates;
+        binstates
     }
-    let excite = excitation.clone();
-    let binstates = createslaterdeterminants(n, m, excite, truncation);
-    return binstates;
+    let excite = excitation;
+    createslaterdeterminants(n, m, excite, truncation)
 }

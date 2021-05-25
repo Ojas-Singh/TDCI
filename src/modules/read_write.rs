@@ -26,7 +26,7 @@ pub fn Hone(f1: String, M: usize) -> Vec<Vec<Complex<f64>>> {
     }
     for i in Hstring {
         let k = i.replace("(", "").replace(")", "").replace(" ", "");
-        let vec: Vec<&str> = k.split(",").collect();
+        let vec: Vec<&str> = k.split(',').collect();
         let a: f64 = vec[0].parse().unwrap();
         let b: f64 = vec[1].parse().unwrap();
         let x = Complex::new(a, b);
@@ -38,7 +38,7 @@ pub fn Hone(f1: String, M: usize) -> Vec<Vec<Complex<f64>>> {
             line += 1;
         }
     }
-    return Hvec;
+    Hvec
 }
 
 pub fn Vpqrs(f2: String, M: usize) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
@@ -55,7 +55,7 @@ pub fn Vpqrs(f2: String, M: usize) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
     }
     for i in Vstring {
         let k = i.replace("(", "").replace(")", "").replace(" ", "");
-        let vec: Vec<&str> = k.split(",").collect();
+        let vec: Vec<&str> = k.split(',').collect();
         let a: f64 = vec[0].parse().unwrap();
         let b: f64 = vec[1].parse().unwrap();
         let x = Complex::new(a, b);
@@ -71,7 +71,7 @@ pub fn Vpqrs(f2: String, M: usize) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
             }
         }
     }
-    return Vvec;
+    Vvec
 }
 
 pub fn save_hamiltonian_txt(hamiltonian: Mutex<Vec<Vec<Complex<f64>>>>, file: String) {
