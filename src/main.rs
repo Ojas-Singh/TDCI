@@ -11,7 +11,10 @@ mod configurations;
 mod read_write;
 #[path = "modules/second_quantization.rs"]
 mod second_quantization;
-
+#[path = "modules/fast.rs"]
+mod fast;
+#[path = "modules/transform.rs"]
+mod transform;
 pub struct Config {
     n: usize,
     m: usize,
@@ -51,8 +54,10 @@ fn main() {
             let Honemat = read_write::Hone(setting.oneelectronfilename, setting.m);
             let Vmat = read_write::Vpqrs(setting.twoelectronfilename, setting.m);
             let start = Instant::now();
+            // let ham =
+                // second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
             let ham =
-                second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
+                fast::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
             let duration = start.elapsed();
             println!(
                 "Time elapsed in computeHamiltonianMatrix is: {:?}",
