@@ -7,12 +7,12 @@ use std::time::Instant;
 
 #[path = "modules/configurations.rs"]
 mod configurations;
+#[path = "modules/fast.rs"]
+mod fast;
 #[path = "modules/read_write.rs"]
 mod read_write;
 #[path = "modules/second_quantization.rs"]
 mod second_quantization;
-#[path = "modules/fast.rs"]
-mod fast;
 #[path = "modules/transform.rs"]
 mod transform;
 pub struct Config {
@@ -55,9 +55,8 @@ fn main() {
             let Vmat = read_write::Vpqrs(setting.twoelectronfilename, setting.m);
             let start = Instant::now();
             // let ham =
-                // second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
-            let ham =
-                fast::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
+            // second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
+            let ham = fast::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
             let duration = start.elapsed();
             println!(
                 "Time elapsed in computeHamiltonianMatrix is: {:?}",
