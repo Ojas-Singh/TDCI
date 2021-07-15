@@ -4,7 +4,6 @@ use rayon::prelude::*;
 use std::sync::Mutex;
 use typenum::U64;
 
-#[inline(always)]
 pub fn sign(n: usize, binstate: &BitArray<u64, U64>) -> f64 {
     let mut s = 1.0;
     for i in binstate.iter().take(n) {
@@ -14,7 +13,7 @@ pub fn sign(n: usize, binstate: &BitArray<u64, U64>) -> f64 {
     }
     s
 }
-#[inline(always)]
+
 pub fn addparticle(n: usize, binstate: &mut BitArray<u64, U64>) {
     if binstate.get(binstate.len() - 1) != Some(true) {
         let mut a = BitArray::<u64, U64>::from_elem(false);
@@ -27,7 +26,7 @@ pub fn addparticle(n: usize, binstate: &mut BitArray<u64, U64>) {
         }
     }
 }
-#[inline(always)]
+
 pub fn removeparticle(n: usize, binstate: &mut BitArray<u64, U64>) {
     if binstate.get(binstate.len() - 1) != Some(true) {
         let mut a = BitArray::<u64, U64>::from_elem(false);
@@ -40,7 +39,7 @@ pub fn removeparticle(n: usize, binstate: &mut BitArray<u64, U64>) {
         }
     }
 }
-#[inline(always)]
+
 pub fn secondQuantizationOneBodyOperator(
     p: usize,
     q: usize,
@@ -65,7 +64,7 @@ pub fn secondQuantizationOneBodyOperator(
     }
     phase
 }
-#[inline(always)]
+
 pub fn secondQuantizationTwoBodyOperator(
     p: usize,
     q: usize,
