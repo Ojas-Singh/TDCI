@@ -1,4 +1,4 @@
-# TDCI
+# Time Dependent Configuration Interaction (TDCI)
 
 
 ##### Building Procedure 
