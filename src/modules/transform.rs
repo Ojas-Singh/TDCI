@@ -3,13 +3,13 @@
 
 use num::complex::Complex;
 pub fn honetoSpin(M: usize, h: &Vec<Vec<Complex<f64>>>) -> Vec<Vec<Complex<f64>>> {
-    let mut spin = vec![vec![Complex::new(0.0, 0.0); M * 2]; M * 2];
-    for p in num_iter::range(1, M * 2) {
-        for q in num_iter::range(1, M * 2) {
+    let mut spin = vec![vec![Complex::new(0.0, 0.0); h.len() * 2]; h.len() * 2];
+    for p in num_iter::range(1, h.len() * 2 + 1) {
+        for q in num_iter::range(1, h.len() * 2 + 1) {
             if p % 2 == q % 2 {
-                let i = (p as f64 + 1.0) / 2.0 - 1.0;
-                let j = (q as f64 + 1.0) / 2.0 - 1.0;
-                spin[p - 1][q - 1] = h[i.floor() as usize][j.floor() as usize];
+                let i = ((p as f64 + 1.0) / 2.0).floor() - 1.0;
+                let j = ((q as f64 + 1.0) / 2.0).floor() - 1.0;
+                spin[p - 1][q - 1] = h[i as usize][j as usize];
             }
         }
     }
@@ -21,22 +21,34 @@ pub fn VeetoSpin(
     M: usize,
     v: &Vec<Vec<Vec<Vec<Complex<f64>>>>>,
 ) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
-    let mut spin = vec![vec![vec![vec![Complex::new(0.0, 0.0); M * 2]; M * 2]; M * 2]; M * 2];
-    for p in num_iter::range(1, M * 2) {
-        for r in num_iter::range(1, M * 2) {
-            if p % 2 == r % 2 {
-                for q in num_iter::range(1, M * 2) {
-                    for s in num_iter::range(1, M * 2) {
-                        if q % 2 == s % 2 {
-                            let i = (p as f64 + 1.0) / 2.0 - 1.0;
-                            let j = (r as f64 + 1.0) / 2.0 - 1.0;
-                            let k = (q as f64 + 1.0) / 2.0 - 1.0;
-                            let l = (s as f64 + 1.0) / 2.0 - 1.0;
-                            spin[p - 1][q - 1][r - 1][s - 1] = v[i.floor() as usize]
-                                [j.floor() as usize][k.floor() as usize]
-                                [l.floor() as usize]
-                        }
+    let mut spin =
+        vec![
+            vec![vec![vec![Complex::new(0.0, 0.0); v.len() * 2]; v.len() * 2]; v.len() * 2];
+            v.len() * 2
+        ];
+    for p in num_iter::range(1, v.len() * 2 + 1) {
+        for r in num_iter::range(1, v.len() * 2 + 1) {
+            for q in num_iter::range(1, v.len() * 2 + 1) {
+                for s in num_iter::range(1, v.len() * 2 + 1) {
+                    let i = ((p as f64 + 1.0) / 2.0).floor() - 1.0;
+                    let j = ((r as f64 + 1.0) / 2.0).floor() - 1.0;
+                    let k = ((q as f64 + 1.0) / 2.0).floor() - 1.0;
+                    let l = ((s as f64 + 1.0) / 2.0).floor() - 1.0;
+                    let bool1: f64;
+                    let bool2: f64;
+                    if (p % 2 == r % 2) & (q % 2 == s % 2) {
+                        bool1 = 1.0
+                    } else {
+                        bool1 = 0.0
                     }
+                    if (p % 2 == s % 2) & (q % 2 == r % 2) {
+                        bool2 = 1.0
+                    } else {
+                        bool2 = 0.0
+                    }
+                    let value1 = v[i as usize][j as usize][k as usize][l as usize] * bool1;
+                    let value2 = v[i as usize][l as usize][k as usize][j as usize] * bool2;
+                    spin[p - 1][q - 1][r - 1][s - 1] = value1 - value2;
                 }
             }
         }
