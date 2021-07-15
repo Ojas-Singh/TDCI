@@ -4,7 +4,10 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use std::env;
 use std::time::Instant;
+use colored::*;
 
+#[path = "modules/beta.rs"]
+mod beta;
 #[path = "modules/configurations.rs"]
 mod configurations;
 #[path = "modules/fast.rs"]
@@ -24,8 +27,9 @@ pub struct Config {
     truncation: usize,
 }
 
-fn main() {
-    println!("Configuration Interaction Method");
+fn main() {                     
+    println!("{}","Configuration Interaction Method".red().on_blue().bold());
+    println!("https://github.com/Ojas-Singh");
     let args: Vec<String> = env::args().collect();
 
     match args.len() {
@@ -33,7 +37,7 @@ fn main() {
             println!("Pass args");
         }
         7 => {
-            println!("Reading Files ...");
+            
             let setting: Config = arg2cfg(args);
             println!(
                 "n : {}, m : {}, excite : {}, oneElectron : {}, twoElectron : {}, truncation: {}",
@@ -44,6 +48,17 @@ fn main() {
                 setting.twoelectronfilename,
                 setting.truncation
             );
+            println!("Reading Files ...");
+            let start0 = Instant::now();
+            let Honemat = read_write::Hone(setting.oneelectronfilename, setting.m);
+            let Vmat = read_write::Vpqrs(setting.twoelectronfilename, setting.m);
+            let duration0 = start0.elapsed();
+            println!(
+                "Time elapsed in Reading files is: {:?}",
+                duration0
+            );
+            println!("Generating States ...");
+            let start1 = Instant::now();
             let binstates = configurations::bit_slaterdeterminants(
                 setting.excitation,
                 setting.n,
@@ -51,18 +66,26 @@ fn main() {
                 setting.truncation,
             );
             println!("Total Generated States :{}", binstates.len());
-            let Honemat = read_write::Hone(setting.oneelectronfilename, setting.m);
-            let Vmat = read_write::Vpqrs(setting.twoelectronfilename, setting.m);
+            let duration1 = start1.elapsed();
+            println!(
+                "Time elapsed in Generating States is: {:?}",
+                duration1
+            );
             let start = Instant::now();
-            // let ham =
-            // second_quantization::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
-            let ham = fast::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
+            let ham = beta::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
             let duration = start.elapsed();
             println!(
                 "Time elapsed in computeHamiltonianMatrix is: {:?}",
                 duration
             );
+            println!("Writing to file ...");
+            let start2 = Instant::now();
             read_write::save_hamiltonian_txt(ham, "ham.txt".to_string());
+            let duration2 = start2.elapsed();
+            println!(
+                "Time elapsed in Writing  is: {:?}",
+                duration2
+            );
         }
 
         _ => {
