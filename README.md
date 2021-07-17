@@ -10,7 +10,7 @@
 ```
 
 
-To Set Thread Limit 
+##### To set Threads limit 
 ```
 export RAYON_NUM_THREADS="6"
 ```
