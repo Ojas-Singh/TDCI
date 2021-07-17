@@ -8,3 +8,9 @@
   export RUSTFLAGS="-C target-cpu=native"
   cargo build --release
 ```
+
+
+To Set Thread Limit 
+```
+export RAYON_NUM_THREADS="6"
+```
