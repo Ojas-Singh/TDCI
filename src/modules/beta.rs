@@ -15,21 +15,18 @@ pub fn computeHamiltonianMatrix(
     M: usize,
 ) -> Mutex<Vec<Vec<Complex<f64>>>> {
     let nslater = binstates.len();
-    let hamiltonian = Mutex::new(vec![vec![Complex::new(0.0, 0.0); nslater]; nslater]);
+    let hamiltonian = Mutex::new(vec![Vec::new(); nslater]);
     let hspin = transform::honetoSpin(M, &h);
     let vspin = transform::VeetoSpin(M, &v);
     (0..nslater).into_par_iter().for_each(|m| {
+        let mut hm = vec![Complex::new(0.0, 0.0); nslater];
         for n in m..nslater {
-            let hmn ;
+            let hmn;
             let numuniqueorbitals: usize;
             numuniqueorbitals = totalDiff(&binstates[n], &binstates[m]);
             match numuniqueorbitals {
                 0 => {
-                    hmn = calcMatrixElementIdentialDet(
-                        &binstates[n],
-                        &vspin,
-                        &hspin
-                    );
+                    hmn = calcMatrixElementIdentialDet(&binstates[n], &vspin, &hspin);
                 }
                 1 => {
                     hmn = calcMatrixElementDiffIn1(&binstates[n], &binstates[m], &vspin, &hspin);
@@ -41,13 +38,22 @@ pub fn computeHamiltonianMatrix(
                     hmn = Complex::new(0.0, 0.0);
                 }
             }
-            let mut hamiltonian = hamiltonian.lock().unwrap();
-            hamiltonian[m][n] = hmn;
-            if m != n {
-                hamiltonian[n][m] = hamiltonian[m][n];
+            hm[n] = hmn;
+        }
+        let mut hamiltonian = hamiltonian.lock().unwrap();
+        hamiltonian[m] = hm;
+        
+    });
+    {
+        let mut hamiltonian = hamiltonian.lock().unwrap();
+        for i in 0..nslater {
+            for j in i..nslater {
+                if i != j {
+                    hamiltonian[j][i] = hamiltonian[i][j]
+                }
             }
         }
-    });
+    }
     hamiltonian
 }
 
