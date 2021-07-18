@@ -2,9 +2,11 @@
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-use std::env;
-use std::time::Instant;
 use colored::*;
+use std::env;
+use std::process;
+use std::time::Instant;
+use sysinfo::SystemExt;
 
 #[path = "modules/beta.rs"]
 mod beta;
@@ -27,17 +29,25 @@ pub struct Config {
     truncation: usize,
 }
 
-fn main() {                     
-    println!("{}","Configuration Interaction Method".red().on_blue().bold());
-    println!("https://github.com/Ojas-Singh");
+fn main() {
+    println!("{}", r#" _______ _____   _____ _____ "#.green().bold());
+    println!("{}", r#"|__   __|  __ \ / ____|_   _|"#.green().bold());
+    println!("{}", r#"   | |  | |  | | |      | |  "#.green().bold());
+    println!("{}", r#"   | |  | |  | | |      | |  "#.green().bold());
+    println!("{}", r#"   | |  | |__| | |____ _| |_ "#.green().bold());
+    println!("{}", r#"   |_|  |_____/ \_____|_____|"#.green().bold());
+
+    println!("{}", "Configuration Interaction Method".blue().bold());
+    println!("{}", "https://github.com/Ojas-Singh/TDCI".blue().italic());
     let args: Vec<String> = env::args().collect();
 
+    let mut system = sysinfo::System::new();
+    system.refresh_all();
     match args.len() {
         1 => {
             println!("Pass args");
         }
         7 => {
-            
             let setting: Config = arg2cfg(args);
             println!(
                 "n : {}, m : {}, excite : {}, oneElectron : {}, twoElectron : {}, truncation: {}",
@@ -54,7 +64,7 @@ fn main() {
             let Vmat = read_write::Vpqrs(setting.twoelectronfilename, setting.m);
             let duration0 = start0.elapsed();
             println!(
-                "Time elapsed in Reading files is: {:?}",
+                "**[Timing] Time elapsed in Reading files is: {:?}",
                 duration0
             );
             println!("Generating States ...");
@@ -68,26 +78,32 @@ fn main() {
             println!("Total Generated States :{}", binstates.len());
             let duration1 = start1.elapsed();
             println!(
-                "Time elapsed in Generating States is: {:?}",
+                "**[Timing] Time elapsed in Generating States is: {:?}",
                 duration1
             );
+            let memory = ((binstates.len() as isize).pow(2) * 8 / 10000000000) as u64;
+            println!(
+                "Estimated Memory utilization : {} GB and System has {} GB",
+                memory,
+                system.total_memory() / 1000000
+            );
+            if memory > (system.total_memory() / 1000000) {
+                println!("{}", "insufficient memory !!!".red().bold());
+                process::abort();
+            }
             let start = Instant::now();
             let ham = beta::computeHamiltonianMatrix(binstates, Vmat, Honemat, setting.m);
             let duration = start.elapsed();
             println!(
-                "Time elapsed in computeHamiltonianMatrix is: {:?}",
+                "**[Timing] Time elapsed in computeHamiltonianMatrix is: {:?}",
                 duration
             );
             println!("Writing to file ...");
             let start2 = Instant::now();
             read_write::save_hamiltonian_txt(ham, "ham.txt".to_string());
             let duration2 = start2.elapsed();
-            println!(
-                "Time elapsed in Writing  is: {:?}",
-                duration2
-            );
+            println!("**[Timing] Time elapsed in Writing  is: {:?}", duration2);
         }
-
         _ => {
             help();
         }
