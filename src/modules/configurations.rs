@@ -1,6 +1,17 @@
 use bit_array::BitArray;
 use typenum::U64;
 
+fn state2unocc(state: &Vec<isize>, M: isize) -> Vec<isize> {
+    let mut stateunocc = Vec::new();
+
+    for p in 1..M + 1 {
+        if !state.iter().any(|&i| i == p) {
+            stateunocc.push(p)
+        }
+    }
+    stateunocc
+}
+
 pub fn bit_slaterdeterminants(
     excitation: String,
     n: usize,
@@ -108,7 +119,7 @@ pub fn bit_slaterdeterminants(
         state
     }
 
-    fn createslaterdeterminants(
+    fn createslaterdeterminants_t(
         n: usize,
         m: usize,
         excite: String,
@@ -130,35 +141,173 @@ pub fn bit_slaterdeterminants(
         let mut up = true;
         let mut down = true;
         let ground = mix(statesup[0].to_vec(), statesdown[0].to_vec());
-        while up {
-            stateup = odometer(stateup, N as isize, m as isize);
-            let sm: isize = stateup.iter().sum();
-            if sm == 0 {
-                up = false;
-            } else if compare(stateup.clone(), ground.clone()) < t + 1 {
-                statesup.push(stateup.clone());
-            }
-        }
-        while down {
-            statedown = odometer(statedown, (n / 2) as isize, m as isize);
-            let sm: isize = statedown.iter().sum();
-            if sm == 0 {
-                down = false;
-            } else if compare(statedown.clone(), ground.clone()) < t + 1 {
-                statesdown.push(statedown.clone());
-            }
-        }
-        for i in statesup {
-            for j in &statesdown {
-                let state = mix(i.to_vec(), j.to_vec());
-                if compare(state.clone(), ground.clone()) < 3 {
-                    let binstate = createbinarystatearray(state);
-                    binstates.push(binstate);
+        match t {
+            0 => {
+                while up {
+                    stateup = odometer(stateup, N as isize, m as isize);
+                    let sm: isize = stateup.iter().sum();
+                    if sm == 0 {
+                        up = false;
+                    } else {
+                        statesup.push(stateup.clone());
+                    }
                 }
+                while down {
+                    statedown = odometer(statedown, (n / 2) as isize, m as isize);
+                    let sm: isize = statedown.iter().sum();
+                    if sm == 0 {
+                        down = false;
+                    } else {
+                        statesdown.push(statedown.clone());
+                    }
+                }
+                for i in statesup {
+                    for j in &statesdown {
+                        let state = mix(i.to_vec(), j.to_vec());
+
+                        let binstate = createbinarystatearray(state);
+                        binstates.push(binstate);
+                    }
+                }
+                binstates
+            }
+
+            1 => {
+                for i in &stateup {
+                    for j in state2unocc(&stateup, m as isize) {
+                        let mut state = stateup.clone();
+                        let stateD = statedown.clone();
+                        state.retain(|&x| x != *i);
+                        state.push(j);
+                        let statemix = mix(state, stateD);
+                        let binstate = createbinarystatearray(statemix);
+                        binstates.push(binstate)
+                    }
+                }
+                for k in &statedown {
+                    for l in state2unocc(&statedown, m as isize) {
+                        let mut state = statedown.clone();
+                        let stateU = stateup.clone();
+                        state.retain(|&x| x != *k);
+                        state.push(l);
+                        let statemix = mix(stateU, state);
+                        let binstate = createbinarystatearray(statemix);
+                        binstates.push(binstate)
+                    }
+                }
+                binstates.push(createbinarystatearray(mix(stateup, statedown)));
+                binstates
+            }
+
+            2 => {
+                for i in &stateup {
+                    for j in state2unocc(&stateup, m as isize) {
+                        let mut state = stateup.clone();
+                        let stateD = statedown.clone();
+                        state.retain(|&x| x != *i);
+                        state.push(j);
+                        let statemix = mix(state, stateD);
+                        let binstate = createbinarystatearray(statemix);
+                        binstates.push(binstate)
+                    }
+                }
+                for k in &statedown {
+                    for l in state2unocc(&statedown, m as isize) {
+                        let mut state = statedown.clone();
+                        let stateU = stateup.clone();
+                        state.retain(|&x| x != *k);
+                        state.push(l);
+                        let statemix = mix(stateU, state);
+                        let binstate = createbinarystatearray(statemix);
+                        binstates.push(binstate)
+                    }
+                }
+                for i in &stateup {
+                    for j in state2unocc(&stateup, m as isize) {
+                        for k in &statedown {
+                            for l in state2unocc(&statedown, m as isize) {
+                                let mut stateU = stateup.clone();
+                                let mut stateD = statedown.clone();
+                                stateU.retain(|&x| x != *i);
+                                stateU.push(j);
+                                stateD.retain(|&x| x != *k);
+                                stateD.push(l);
+                                let mut state = mix(stateU, stateD).clone();
+                                let binstate = createbinarystatearray(state);
+                                binstates.push(binstate)
+                            }
+                        }
+                    }
+                }
+                let combup = combination::combine::from_vec_at(&stateup, 2);
+                let combupunocc =
+                    combination::combine::from_vec_at(&state2unocc(&stateup, m as isize), 2);
+                for i in combup {
+                    for j in &combupunocc {
+                        let mut state = stateup.clone();
+                        let stateD = statedown.clone();
+                        state.retain(|&x| x != i[0]);
+                        state.push(j[0]);
+                        state.retain(|&x| x != i[1]);
+                        state.push(j[1]);
+                        let statemix = mix(state, stateD);
+                        let binstate = createbinarystatearray(statemix);
+                        binstates.push(binstate)
+                    }
+                }
+                let combdown = combination::combine::from_vec_at(&statedown, 2);
+                let combdownunocc =
+                    combination::combine::from_vec_at(&state2unocc(&statedown, m as isize), 2);
+                for i in combdown {
+                    for j in &combdownunocc {
+                        let mut state = statedown.clone();
+                        let stateU = stateup.clone();
+                        state.retain(|&x| x != i[0]);
+                        state.push(j[0]);
+                        state.retain(|&x| x != i[1]);
+                        state.push(j[1]);
+                        let statemix = mix(stateU, state);
+                        let binstate = createbinarystatearray(statemix);
+                        binstates.push(binstate)
+                    }
+                }
+                binstates.push(createbinarystatearray(mix(stateup, statedown)));
+                binstates
+            }
+
+            _ => {
+                while up {
+                    stateup = odometer(stateup, N as isize, m as isize);
+                    let sm: isize = stateup.iter().sum();
+                    if sm == 0 {
+                        up = false;
+                    } else if compare(stateup.clone(), ground.clone()) < t + 1 {
+                        statesup.push(stateup.clone());
+                    }
+                }
+                while down {
+                    statedown = odometer(statedown, (n / 2) as isize, m as isize);
+                    let sm: isize = statedown.iter().sum();
+                    if sm == 0 {
+                        down = false;
+                    } else if compare(statedown.clone(), ground.clone()) < t + 1 {
+                        statesdown.push(statedown.clone());
+                    }
+                }
+                for i in statesup {
+                    for j in &statesdown {
+                        let state = mix(i.to_vec(), j.to_vec());
+                        if compare(state.clone(), ground.clone()) < t + 1 {
+                            let binstate = createbinarystatearray(state);
+                            binstates.push(binstate);
+                        }
+                    }
+                }
+                binstates
             }
         }
-        binstates
     }
+
     let excite = excitation;
-    createslaterdeterminants(n, m, excite, truncation)
+    createslaterdeterminants_t(n, m, excite, truncation)
 }
