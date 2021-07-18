@@ -26,3 +26,4 @@ bit-array = "0.4.4"
 rayon = "1.5.1"
 mimalloc = { version = "0.1.26", default-features = false }
 sysinfo = "0.19.2"
+combination = "0.1.5"
