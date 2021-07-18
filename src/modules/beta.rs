@@ -42,18 +42,17 @@ pub fn computeHamiltonianMatrix(
         }
         let mut hamiltonian = hamiltonian.lock().unwrap();
         hamiltonian[m] = hm;
-        
     });
-    {
-        let mut hamiltonian = hamiltonian.lock().unwrap();
-        for i in 0..nslater {
-            for j in i..nslater {
-                if i != j {
-                    hamiltonian[j][i] = hamiltonian[i][j]
-                }
-            }
-        }
-    }
+    // {
+    //     let mut hamiltonian = hamiltonian.lock().unwrap();
+    //     for i in 0..nslater {
+    //         for j in i..nslater {
+    //             if i != j {
+    //                 hamiltonian[j][i] = hamiltonian[i][j]
+    //             }
+    //         }
+    //     }
+    // }
     hamiltonian
 }
 
@@ -135,7 +134,7 @@ fn totalDiff(state: &BitArray<u64, U64>, state2: &BitArray<u64, U64>) -> usize {
 fn calcMatrixElementIdentialDet(
     state1: &BitArray<u64, U64>,
     v: &Vec<Vec<Vec<Vec<Complex<f64>>>>>,
-    h: &Vec<Vec<Complex<f64>>>
+    h: &Vec<Vec<Complex<f64>>>,
 ) -> Complex<f64> {
     let mut helem = Complex::new(0.0, 0.0);
     let mut relem = Complex::new(0.0, 0.0);
@@ -156,7 +155,7 @@ fn calcMatrixElementDiffIn1(
     state1: &BitArray<u64, U64>,
     state2: &BitArray<u64, U64>,
     v: &Vec<Vec<Vec<Vec<Complex<f64>>>>>,
-    h: &Vec<Vec<Complex<f64>>>
+    h: &Vec<Vec<Complex<f64>>>,
 ) -> Complex<f64> {
     let (unique1, unique2, sign) = getUniqueOrbitalsInMixIndexListsPlusSign(state1, state2);
     let m = unique1[0];
