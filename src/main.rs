@@ -81,7 +81,7 @@ fn main() {
                 "**[Timing] Time elapsed in Generating States is: {:?}",
                 duration1
             );
-            let memory = ((binstates.len() as isize).pow(2) * 8 / 10000000000) as u64;
+            let memory = ((binstates.len() as isize).pow(2) * 8 / 1000000000) as u64;
             println!(
                 "Estimated Memory utilization : {} GB and System has {} GB",
                 memory,
