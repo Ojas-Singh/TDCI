@@ -133,6 +133,6 @@ pub fn arg2cfg(args: Vec<String>) -> Config {
 fn help() {
     println!(
         "usage:: pass system args as :
-n , m , excite , oneElectronFilename , twoElectronFilename "
+n , m , excite[Singlet, Triplet] , oneElectronFilename , twoElectronFilename, Truncation[0:FCI, 1:CIS, 2:CISD, i:CI upto ith exitaction] "
     );
 }
