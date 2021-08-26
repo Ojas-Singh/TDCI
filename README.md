@@ -5,7 +5,7 @@
 ```
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
   rustup default nightly
-  export RUSTFLAGS="-C target-cpu=native"
+  export RUSTFLAGS="-C target-cpu=native" or export RUSTFLAGS="-C target-feature=+avx2"
   cargo build --release
 ```
 
