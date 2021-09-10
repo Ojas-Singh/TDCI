@@ -14,3 +14,8 @@
 ```
 export RAYON_NUM_THREADS="6"
 ```
+
+
+
+
+export LD_LIBRARY_PATH=$HOME/psi4conda/lib/
