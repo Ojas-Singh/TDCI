@@ -1,5 +1,6 @@
 use num::complex::Complex;
 use std::fs::File;
+use std::io::prelude::*;
 use std::io::{self, BufRead, BufWriter, Write};
 use std::path::Path;
 use std::sync::Mutex;
@@ -74,8 +75,8 @@ pub fn Vpqrs(f2: String, M: usize) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
     Vvec
 }
 
-pub fn save_hamiltonian_txt(hamiltonian: Mutex<Vec<Vec<Complex<f64>>>>, file: String) {
-    let hamiltonian = hamiltonian.lock().unwrap();
+pub fn save_hamiltonian_txt(hamiltonian: Vec<Vec<Complex<f64>>>, file: String) {
+    // let hamiltonian = hamiltonian.lock().unwrap();
     let buffer = File::create(file).expect("Unable to create file");
     let mut f = BufWriter::new(buffer);
     for i in 0..hamiltonian.len() {
@@ -84,4 +85,29 @@ pub fn save_hamiltonian_txt(hamiltonian: Mutex<Vec<Vec<Complex<f64>>>>, file: St
             f.write_all(data.as_bytes()).expect("Unable to write data");
         }
     }
+}
+
+pub fn save_hamiltonian_txt_real(hamiltonian: Vec<Vec<Complex<f64>>>, file: String) {
+    // let hamiltonian = hamiltonian.lock().unwrap();
+    let buffer = File::create(file).expect("Unable to create file");
+    let mut f = BufWriter::new(buffer);
+    for i in 0..hamiltonian.len() {
+        for j in 0..hamiltonian[i].len() {
+            let data = (hamiltonian[i][j].re).to_string() + " \n";
+            f.write_all(data.as_bytes()).expect("Unable to write data");
+        }
+    }
+}
+pub fn pycode() -> String {
+    let mut content = String::new();
+    let filename = "code.py";
+    match File::open(filename) {
+        Ok(mut file) => {
+            file.read_to_string(&mut content).unwrap();
+        }
+        Err(error) => {
+            println!("Error opening file {}: {}", filename, error);
+        }
+    }
+    content
 }

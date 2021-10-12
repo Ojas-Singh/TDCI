@@ -1,8 +1,9 @@
 // MO to Spin MO Integrals
 // https://github.com/erikkjellgren/SlowQuant/blob/master/slowquant/integraltransformation/IntegralTransform.py
-
 use num::complex::Complex;
-pub fn honetoSpin(M: usize, h: &Vec<Vec<Complex<f64>>>) -> Vec<Vec<Complex<f64>>> {
+use rayon::prelude::*;
+use std::thread;
+fn honetospin(M: usize, h: &Vec<Vec<Complex<f64>>>) -> Vec<Vec<Complex<f64>>> {
     let mut spin = vec![vec![Complex::new(0.0, 0.0); h.len() * 2]; h.len() * 2];
     for p in num_iter::range(1, h.len() * 2 + 1) {
         for q in num_iter::range(1, h.len() * 2 + 1) {
@@ -17,10 +18,7 @@ pub fn honetoSpin(M: usize, h: &Vec<Vec<Complex<f64>>>) -> Vec<Vec<Complex<f64>>
     spin
 }
 
-pub fn VeetoSpin(
-    M: usize,
-    v: &Vec<Vec<Vec<Vec<Complex<f64>>>>>,
-) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
+fn veetospin(M: usize, v: &Vec<Vec<Vec<Vec<Complex<f64>>>>>) -> Vec<Vec<Vec<Vec<Complex<f64>>>>> {
     let mut spin =
         vec![
             vec![vec![vec![Complex::new(0.0, 0.0); v.len() * 2]; v.len() * 2]; v.len() * 2];
@@ -55,4 +53,29 @@ pub fn VeetoSpin(
     }
 
     spin
+}
+
+pub fn tospin(
+    M: usize,
+    h: &Vec<Vec<Complex<f64>>>,
+    v: &Vec<Vec<Vec<Vec<Complex<f64>>>>>,
+) -> (Vec<Vec<Complex<f64>>>, Vec<Vec<Vec<Vec<Complex<f64>>>>>) {
+    // let  hspin = honetospin(M, h);
+    let vspin = veetospin(M, v);
+    // (hspin, vspin)
+
+    let mut hspin: Option<Vec<Vec<Complex<f64>>>> = None;
+    // let mut vspin: Option<Vec<Vec<Vec<Vec<Complex<f64>>>>>> = None;
+    rayon::scope(|s| {
+        s.spawn(|_| hspin = Some(honetospin(M, h)));
+        // s.spawn(|_| vspin = Some(veetospin(M, v)));
+    });
+    (hspin.unwrap(), vspin)
+    // let hspin:Vec<Vec<Complex<f64>>> = ;
+    // let handle = thread::spawn(move || {
+    //     hspinn = honetospin(M, h);
+    // });
+    // let  vspin = veetospin(M, v);
+    // handle.join().unwrap();
+    // (hspin, vspin)
 }

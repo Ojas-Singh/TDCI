@@ -15,7 +15,12 @@
 export RAYON_NUM_THREADS="6"
 ```
 
-
-
-
+##### Psi4 API 
+```
 export LD_LIBRARY_PATH=$HOME/psi4conda/lib/
+```
+
+##### Openmpi 
+```
+export KMP_DUPLICATE_LIB_OK=TRUE
+```

@@ -22,7 +22,6 @@ scf_e, wfn = psi4.energy('SCF', return_wfn=True)
 C = wfn.Ca()
 
 ndocc = wfn.doccpi()[0]
-print(wfn.nalpha())
 nmo = wfn.nmo()
 nvirt = nmo - ndocc
 print(ndocc,nmo,nvirt)
@@ -129,7 +128,6 @@ f = open("ham.txt", "r")
 Lines = f.readlines()
 hman =[]
 for i in Lines:
-    # hman.append(float(i))
     hman.append(float(i.split('+')[0]))
 
 Hmat=np.zeros((int(nDet),int(nDet)))
@@ -138,11 +136,7 @@ for i in range(int(nDet)):
     for j in range(int(nDet)):
         Hmat[i,j]+=hman[line]
         line+=1
-# Hmat = Hmat + Hmat.T - Hmat.diagonal(1)
-# w,v = np.linalg.eigh(Hmat,UPLO='L')
-b_symm = (Hmat + Hmat.T)
-np.fill_diagonal(b_symm, b_symm.diagonal()/2)
-w,v = np.linalg.eigh(b_symm)
+w,v = np.linalg.eigh(Hmat)
 # print(Hmat)
 print("Energy By Our Ci code :",w[0])
 print("Psi4 Eigen Value      :",e_cisd[0] )
