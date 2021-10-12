@@ -7,11 +7,11 @@ def run(x):
     psi4.set_memory('2 GB')
     numpy_memory = 14
     mol = psi4.geometry("""
-    He
+    O
     symmetry c1
     """)
     # feb-cc-pcv_6pd_z
-    psi4.set_options({'basis': 'may-cc-pv_5pd_z', 'scf_type': 'pk', 'e_convergence': 1e-8, 'd_convergence': 1e-8})
+    psi4.set_options({'basis': 'cc-pvdz', 'scf_type': 'pk', 'e_convergence': 1e-8, 'd_convergence': 1e-8})
     scf_e, wfn = psi4.energy('SCF', return_wfn=True)
     C = wfn.Ca()
     # Number of molecular orbitals
