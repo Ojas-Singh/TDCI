@@ -32,7 +32,7 @@ export KMP_DUPLICATE_LIB_OK=TRUE
 
 ### Benchmarks
 
-**Sulphur**  aug-cc-pVDZ  [5s4p2d] → 27 function [Old Benchmark , Current Version is 2 times faster]
+**Sulphur**  aug-cc-pVDZ  [5s4p2d] → 27 function 
 
 ```
 CPU(s):  48 
