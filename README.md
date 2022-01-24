@@ -32,31 +32,6 @@ export KMP_DUPLICATE_LIB_OK=TRUE
 
 ### Benchmarks
 
-**Sulphur**  aug-cc-pVDZ  [5s4p2d] → 27 function 
-
-```
-CPU(s):  48 
-Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz 
-[Timing] Time elapsed in Reading files is: 319.593169ms
-Total Generated States : 32985
-[Timing] Time elapsed in Generating States is: 5.16356ms
-Memory usage ~ 18 GB
-```
-| Cores | *Compute Hamiltonian Matrix* (*s*) |
-| ----: | :--------------------------------: |
-|     1 |                33.9                |
-|     2 |                17.6                |
-|     4 |                9.9                 |
-|     6 |                6.8                 |
-|     8 |                5.2                 |
-|    12 |                3.6                 |
-|    18 |                2.8                 |
-|    24 |                2.5                 |
-|    30 |                2.11                |
-|    36 |                1.84                |
-|    42 |                1.79                |
-|    48 |                1.69                |
-
 ![](https://raw.githubusercontent.com/Ojas-Singh/TDCI/master/docs/images/speedup.png)
 
 <!-- ![](https://raw.githubusercontent.com/Ojas-Singh/TDCI/master/docs/1.PNG) -->
