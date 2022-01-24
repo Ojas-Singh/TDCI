@@ -57,7 +57,7 @@ Memory usage ~ 18 GB
 |    42 |                1.79                |
 |    48 |                1.69                |
 
-![](https://raw.githubusercontent.com/Ojas-Singh/TDCI/master/docs/images/speedup.PNG)
+![](https://raw.githubusercontent.com/Ojas-Singh/TDCI/master/docs/images/speedup.png)
 
 <!-- ![](https://raw.githubusercontent.com/Ojas-Singh/TDCI/master/docs/1.PNG) -->
 
